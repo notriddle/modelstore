@@ -100,7 +100,10 @@ class TensorflowManager(ModelManager):
         model_path = _model_file_path(model_path)
         # Alternative model storage file format for Keras 3.0
         if _is_tensorflow_using_keras3_api():
-            model_path = f"{model_path}.{KERAS_3_MODEL_FILE_EXTENSION}"
+            if os.path.isdir(model_path):
+                return keras.layers.TFSMLayer(model_path, call_endpoint="serving_default")
+            else:
+                model_path = f"{model_path}.{KERAS_3_MODEL_FILE_EXTENSION}"
 
         return keras.models.load_model(model_path)
 
