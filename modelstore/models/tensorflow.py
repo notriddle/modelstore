@@ -74,7 +74,7 @@ class TensorflowManager(ModelManager):
             pass
         from tensorflow import keras
 
-        return isinstance(kwargs.get("model"), keras.Model)
+        return isinstance(kwargs.get("model"), keras.Model) or isinstance(kwargs.get("model"), keras.layers.TFSMLayer)
 
     def _get_functions(self, **kwargs) -> list:
         model = kwargs["model"]
