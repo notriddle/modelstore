@@ -74,7 +74,7 @@ class TensorflowManager(ModelManager):
             pass
         from tensorflow import keras
 
-        return isinstance(kwargs.get("model"), keras.Model) or isinstance(kwargs.get("model"), keras.layers.TFSMLayer)
+        return isinstance(kwargs.get("model"), keras.Model)
 
     def _get_functions(self, **kwargs) -> list:
         model = kwargs["model"]
@@ -101,7 +101,7 @@ class TensorflowManager(ModelManager):
         # Alternative model storage file format for Keras 3.0
         if _is_tensorflow_using_keras3_api():
             if os.path.isdir(model_path):
-                return keras.layers.TFSMLayer(model_path, call_endpoint="serving_default")
+                return keras.Model(keras.layers.TFSMLayer(model_path, call_endpoint="serving_default"))
             else:
                 model_path = f"{model_path}.{KERAS_3_MODEL_FILE_EXTENSION}"
 
