@@ -73,8 +73,9 @@ class TensorflowManager(ModelManager):
             # transformers cannot import tensorflow stuff
             pass
         from tensorflow import keras
+        import tf_keras
 
-        return isinstance(kwargs.get("model"), keras.Model)
+        return isinstance(kwargs.get("model"), keras.Model) or isinstance(kwargs.get("model"), tf_keras.Model)
 
     def _get_functions(self, **kwargs) -> list:
         model = kwargs["model"]
@@ -101,7 +102,8 @@ class TensorflowManager(ModelManager):
         # Alternative model storage file format for Keras 3.0
         if _is_tensorflow_using_keras3_api():
             if os.path.isdir(model_path):
-                return keras.Model(keras.layers.TFSMLayer(model_path, call_endpoint="serving_default"))
+                import tf_keras
+                return tf_keras.models.load_model(model_path)
             else:
                 model_path = f"{model_path}.{KERAS_3_MODEL_FILE_EXTENSION}"
 
